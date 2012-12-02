@@ -1,20 +1,20 @@
 Locale: C, language code: None, encoding: None
-.. Formatted date:Fri, 02 March 2012
-Locale: German_Germany.1252, language code: de_DE, encoding: cp1252
-.. Formatted date:Fr, 02 März 2012
-Locale: Russian_Russia.1251, language code: Russian_Russia, encoding: 1251
-.. Formatted date:Пт, 02 Март 2012
-Locale: Russian_Russia.1251, language code: Russian_Russia, encoding: 1251
-.. Formatted date:Пт, 02 Март 2012
-Locale: English_United Kingdom.1252, language code: English_United Kingdom, encoding: 1252
-.. Formatted date:Fri, 02 March 2012
+.. Formatted date:Fri Mar  2 00:00:00 2012
+Locale: de_DE, language code: de_DE, encoding: ISO8859-1
+.. Formatted date:Fr 02 Mär 2012 00:00:00 
+Locale: de_DE.iso88591, language code: de_DE, encoding: ISO8859-1
+.. Formatted date:Fr 02 Mär 2012 00:00:00 
+Locale: de_DE.iso885915@euro, language code: de_DE, encoding: ISO8859-15
+.. Formatted date:Fr 02 Mär 2012 00:00:00 
+Locale: ru_RU.CP1251, language code: ru_RU, encoding: CP1251
+.. Formatted date:Птн 02 Мар 2012 00:00:00
+Locale: en_GB.UTF-8, language code: en_GB, encoding: UTF-8
+.. Formatted date:Fri 02 Mar 2012 00:00:00 
 Locale: C, language code: None, encoding: None
-.. Formatted date:Fri, 02 March 2012 Øl trinken beim Besäufnis
-Locale: German_Germany.1252, language code: de_DE, encoding: cp1252
-.. Formatted date:Fr, 02 März 2012 Øl trinken beim Besäufnis
-Locale: English_United Kingdom.1252, language code: English_United Kingdom, encoding: 1252
-.. Formatted date:Fri, 02 March 2012 Øl trinken beim Besäufnis
-Locale: Russian_Russia.1251, language code: Russian_Russia, encoding: 1251
-.. Formatted date:Пт, 02 Март 2012 Ol trinken beim Besaufnis
-Locale: Russian_Russia.1251, language code: Russian_Russia, encoding: 1251
-.. Formatted date:Ol trinken beim Besaufnis
+.. Formatted date:Fri Mar  2 00:00:00 2012 Øl trinken beim Besäufnis
+Locale: de_DE.iso88591, language code: de_DE, encoding: ISO8859-1
+.. Formatted date:Fr 02 Mär 2012 00:00:00  Øl trinken beim Besäufnis
+Locale: en_GB.UTF-8, language code: en_GB, encoding: UTF-8
+.. Formatted date:Fri 02 Mar 2012 00:00:00  Øl trinken beim Besäufnis
+Locale: ru_RU.CP1251, language code: ru_RU, encoding: CP1251
+.. Formatted date:Птн 02 Мар 2012 00:00:00 Øl trinken beim Besäufnis

@@ -6,6 +6,7 @@ import datetime
 import locale
 import six
 import re
+import sys
 
 DAY = 2
 MON = 3 # Name of month 3 has umlaut (= non-ascii char) in German locale
@@ -58,22 +59,48 @@ def fmt(new_locale, date_format, expected_result):
 
 
 def test_strftime():
-    fmt("C", "%c", "Fri Mar  2 00:00:00 2012")
-    fmt("de_DE", "%c", "Fr 02 Mär 2012 00:00:00 ") # trailing blank WTF??
-    fmt("de_DE.iso88591", "%c", "Fr 02 Mär 2012 00:00:00 ") # trailing blank WTF??
-    fmt("de_DE.iso885915@euro", "%c", "Fr 02 Mär 2012 00:00:00 ") # trailing blank WTF??
-    fmt("ru_RU.CP1251", "%c", "Птн 02 Мар 2012 00:00:00") # NO trailing blank :-)
-    # Get locale from console
-    loc = locale.setlocale(locale.LC_ALL, '')
-    # XXX My console is set to en_GB.UTF-8. If your setting is different, you may
-    # XXX have to adjust the excpected result here!
-    fmt(loc, "%c", "Fri 02 Mar 2012 00:00:00 ") # trailing blank WTF??
 
-    # Now, what if the format string itself contains non-ascii chars?
-    # Grr, some questions may better not be asked...
-    # Non-ASCII characters in format string in Python < 3 forces us to do the 
-    # xmlcharrefreplace-regex-dance, see above.
-    fmt("C", "%c Øl trinken beim Besäufnis", "Fri Mar  2 00:00:00 2012 Øl trinken beim Besäufnis")
-    fmt("de_DE.iso88591", "%c Øl trinken beim Besäufnis", "Fr 02 Mär 2012 00:00:00  Øl trinken beim Besäufnis")
-    fmt("en_GB.UTF-8", "%c Øl trinken beim Besäufnis", "Fri 02 Mar 2012 00:00:00  Øl trinken beim Besäufnis")
-    fmt("ru_RU.CP1251", "%c Øl trinken beim Besäufnis", "Птн 02 Мар 2012 00:00:00 Øl trinken beim Besäufnis")
+    if sys.platform == 'win32':
+        # MSDN articles about locales:
+        # - General format of locale string: http://msdn.microsoft.com/en-us/library/hzz3tw78.aspx
+        # - Language strings: http://msdn.microsoft.com/en-us/library/39cwe7zf.aspx
+        # - Country/Region: http://msdn.microsoft.com/en-us/library/cdax410z.aspx
+        # - About code pages: http://msdn.microsoft.com/en-us/library/2x8et5ee.aspx
+        # - setlocale() w/ samples: http://msdn.microsoft.com/en-us/library/x99tb11d.aspx
+        fmt("C", "%c", "Fri Mar  2 00:00:00 2012")
+        fmt("german_germany", "%c", "Fr 02 Mär 2012 00:00:00 ") # trailing blank WTF??
+        fmt("russian_russia.CP1251", "%c", "Птн 02 Мар 2012 00:00:00") # NO trailing blank :-)
+        # Get locale from console
+        loc = locale.setlocale(locale.LC_ALL, '')
+        # XXX My console is set to en_GB.UTF-8. If your setting is different, you may
+        # XXX have to adjust the excpected result here!
+        fmt(loc, "%c", "Fri 02 Mar 2012 00:00:00 ") # trailing blank WTF??
+
+        # Now, what if the format string itself contains non-ascii chars?
+        # Grr, some questions may better not be asked...
+        # Non-ASCII characters in format string in Python < 3 forces us to do the 
+        # xmlcharrefreplace-regex-dance, see above.
+        fmt("C", "%c Øl trinken beim Besäufnis", "Fri Mar  2 00:00:00 2012 Øl trinken beim Besäufnis")
+        fmt("german_germany", "%c Øl trinken beim Besäufnis", "Fr 02 Mär 2012 00:00:00  Øl trinken beim Besäufnis")
+        fmt("english_united kingdom", "%c Øl trinken beim Besäufnis", "Fri 02 Mar 2012 00:00:00  Øl trinken beim Besäufnis")
+        fmt("russian_russia.CP1251", "%c Øl trinken beim Besäufnis", "Птн 02 Мар 2012 00:00:00 Øl trinken beim Besäufnis")
+    else:
+        fmt("C", "%c", "Fri Mar  2 00:00:00 2012")
+        fmt("de_DE", "%c", "Fr 02 Mär 2012 00:00:00 ") # trailing blank WTF??
+        fmt("de_DE.iso88591", "%c", "Fr 02 Mär 2012 00:00:00 ") # trailing blank WTF??
+        fmt("de_DE.iso885915@euro", "%c", "Fr 02 Mär 2012 00:00:00 ") # trailing blank WTF??
+        fmt("ru_RU.CP1251", "%c", "Птн 02 Мар 2012 00:00:00") # NO trailing blank :-)
+        # Get locale from console
+        loc = locale.setlocale(locale.LC_ALL, '')
+        # XXX My console is set to en_GB.UTF-8. If your setting is different, you may
+        # XXX have to adjust the excpected result here!
+        fmt(loc, "%c", "Fri 02 Mar 2012 00:00:00 ") # trailing blank WTF??
+
+        # Now, what if the format string itself contains non-ascii chars?
+        # Grr, some questions may better not be asked...
+        # Non-ASCII characters in format string in Python < 3 forces us to do the 
+        # xmlcharrefreplace-regex-dance, see above.
+        fmt("C", "%c Øl trinken beim Besäufnis", "Fri Mar  2 00:00:00 2012 Øl trinken beim Besäufnis")
+        fmt("de_DE.iso88591", "%c Øl trinken beim Besäufnis", "Fr 02 Mär 2012 00:00:00  Øl trinken beim Besäufnis")
+        fmt("en_GB.UTF-8", "%c Øl trinken beim Besäufnis", "Fri 02 Mar 2012 00:00:00  Øl trinken beim Besäufnis")
+        fmt("ru_RU.CP1251", "%c Øl trinken beim Besäufnis", "Птн 02 Мар 2012 00:00:00 Øl trinken beim Besäufnis")

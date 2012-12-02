@@ -5,6 +5,7 @@ from nose.tools import assert_equal
 import datetime
 import locale
 import six
+import re
 
 DAY = 2
 MON = 3 # Name of month 3 has umlaut (= non-ascii char) in German locale
@@ -27,14 +28,32 @@ def fmt(new_locale, date_format, expected_result):
     
     # Format date and check it
     d = datetime.date(YEAR, MON, DAY)
-    result = d.strftime(date_format)
-    if not six.PY3:
-        # For Python < 3 we must decode from set locale into unicode.
-        # In other words, in Python < 3 strftime() returns an encoded
-        # byte string, not a unicode string.
+    if six.PY3:
+        # It could be so easy... *sigh*
+        result = d.strftime(date_format)
+    else:
+        # We must ensure that the format string is an encoded
+        # byte string, ASCII only WTF!!!
+        # But with "xmlcharrefreplace" our formatted date will produce *yuck*
+        # like this:
+        #        "Øl trinken beim Besäufnis"
+        #    --> "&#216;l trinken beim Bes&#228;ufnis"
+        date_format = date_format.encode('ascii', errors="xmlcharrefreplace")
+        result = d.strftime(date_format)
+        # strftime() returns an encoded byte string
+        # which we must decode into unicode.
         lang_code, enc = locale.getlocale(locale.LC_ALL)
         if enc:
             result = result.decode(enc)
+        else:
+            result = unicode(result)
+        # Convert XML character references back to unicode characters.
+        if "&#" in result:
+            result = re.sub(r'&#(?P<num>\d+);'
+                , lambda m: unichr(int(m.group('num')))
+                , result
+            )
+
     assert_equal(result, expected_result)
 
 
@@ -49,3 +68,12 @@ def test_strftime():
     # XXX My console is set to en_GB.UTF-8. If your setting is different, you may
     # XXX have to adjust the excpected result here!
     fmt(loc, "%c", "Fri 02 Mar 2012 00:00:00 ") # trailing blank WTF??
+
+    # Now, what if the format string itself contains non-ascii chars?
+    # Grr, some questions may better not be asked...
+    # Non-ASCII characters in format string in Python < 3 forces us to do the 
+    # xmlcharrefreplace-regex-dance, see above.
+    fmt("C", "%c Øl trinken beim Besäufnis", "Fri Mar  2 00:00:00 2012 Øl trinken beim Besäufnis")
+    fmt("de_DE.iso88591", "%c Øl trinken beim Besäufnis", "Fr 02 Mär 2012 00:00:00  Øl trinken beim Besäufnis")
+    fmt("en_GB.UTF-8", "%c Øl trinken beim Besäufnis", "Fri 02 Mar 2012 00:00:00  Øl trinken beim Besäufnis")
+    fmt("ru_RU.CP1251", "%c Øl trinken beim Besäufnis", "Птн 02 Мар 2012 00:00:00 Øl trinken beim Besäufnis")

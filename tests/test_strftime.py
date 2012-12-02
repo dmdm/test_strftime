@@ -29,7 +29,9 @@ def fmt(new_locale, date_format, expected_result):
     d = datetime.date(YEAR, MON, DAY)
     result = d.strftime(date_format)
     if not six.PY3:
-        # For Python < 3 we must decode from set locale into unicode
+        # For Python < 3 we must decode from set locale into unicode.
+        # In other words, in Python < 3 strftime() returns an encoded
+        # byte string, not a unicode string.
         lang_code, enc = locale.getlocale(locale.LC_ALL)
         if enc:
             result = result.decode(enc)

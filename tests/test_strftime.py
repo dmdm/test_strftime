@@ -77,9 +77,6 @@ def test_strftime():
         fmt(loc, "%c", "Fri 02 Mar 2012 00:00:00 ") # trailing blank WTF??
 
         # Now, what if the format string itself contains non-ascii chars?
-        # Grr, some questions may better not be asked...
-        # Non-ASCII characters in format string in Python < 3 forces us to do the 
-        # xmlcharrefreplace-regex-dance, see above.
         fmt("C", "%c Øl trinken beim Besäufnis", "Fri Mar  2 00:00:00 2012 Øl trinken beim Besäufnis")
         fmt("german_germany", "%c Øl trinken beim Besäufnis", "Fr 02 Mär 2012 00:00:00  Øl trinken beim Besäufnis")
         fmt("english_united kingdom", "%c Øl trinken beim Besäufnis", "Fri 02 Mar 2012 00:00:00  Øl trinken beim Besäufnis")

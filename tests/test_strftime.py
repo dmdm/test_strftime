@@ -7,6 +7,8 @@ import locale
 import six
 import re
 import sys
+import codecs
+import os
 
 DAY = 2
 MON = 3 # Name of month 3 has umlaut (= non-ascii char) in German locale
@@ -55,11 +57,20 @@ def fmt(new_locale, date_format, expected_result):
                 , result
             )
 
+    # BEGIN DEBUG
+    with codecs.open("formatted_dates.txt", "a", encoding="utf-8") as fh:
+        fh.write("Locale: " + new_locale + ", language code: " + str(lang_code) + ", encoding: " + str(enc) + "\n")
+        fh.write(".. Formatted date:" + result + "\n")
+    # END DEBUG
+
     assert_equal(result, expected_result)
 
 
 def test_strftime():
-
+    try:
+        os.unlink("formatted_dates.txt")
+    except (WindowsError, IOError, OSError):
+        pass
     if sys.platform == 'win32':
         # MSDN articles about locales:
         # - General format of locale string: http://msdn.microsoft.com/en-us/library/hzz3tw78.aspx
@@ -67,20 +78,27 @@ def test_strftime():
         # - Country/Region: http://msdn.microsoft.com/en-us/library/cdax410z.aspx
         # - About code pages: http://msdn.microsoft.com/en-us/library/2x8et5ee.aspx
         # - setlocale() w/ samples: http://msdn.microsoft.com/en-us/library/x99tb11d.aspx
-        fmt("C", "%c", "Fri Mar  2 00:00:00 2012")
-        fmt("german_germany", "%c", "Fr 02 Mär 2012 00:00:00 ") # trailing blank WTF??
-        fmt("russian_russia.CP1251", "%c", "Птн 02 Мар 2012 00:00:00") # NO trailing blank :-)
+        fmt("C", "%a, %d %B %Y", "Fri, 02 March 2012")
+        fmt("German_Germany.1252", "%a, %d %B %Y", "Fr, 02 März 2012")
+        fmt("Russian_Russia.1251", "%a, %d %B %Y", "\u041f\u0442, 02 \u041c\u0430\u0440\u0442 2012")
+        fmt("Russian_Russia.1251", "%a, %d %B %Y", "Пт, 02 Март 2012")
         # Get locale from console
         loc = locale.setlocale(locale.LC_ALL, '')
         # XXX My console is set to en_GB.UTF-8. If your setting is different, you may
         # XXX have to adjust the excpected result here!
-        fmt(loc, "%c", "Fri 02 Mar 2012 00:00:00 ") # trailing blank WTF??
+        fmt(loc, "%a, %d %B %Y", "Fri, 02 March 2012")
 
         # Now, what if the format string itself contains non-ascii chars?
-        fmt("C", "%c Øl trinken beim Besäufnis", "Fri Mar  2 00:00:00 2012 Øl trinken beim Besäufnis")
-        fmt("german_germany", "%c Øl trinken beim Besäufnis", "Fr 02 Mär 2012 00:00:00  Øl trinken beim Besäufnis")
-        fmt("english_united kingdom", "%c Øl trinken beim Besäufnis", "Fri 02 Mar 2012 00:00:00  Øl trinken beim Besäufnis")
-        fmt("russian_russia.CP1251", "%c Øl trinken beim Besäufnis", "Птн 02 Мар 2012 00:00:00 Øl trinken beim Besäufnis")
+        fmt("C", "%a, %d %B %Y Øl trinken beim Besäufnis", "Fri, 02 March 2012 Øl trinken beim Besäufnis")
+        fmt("German_Germany.1252", "%a, %d %B %Y Øl trinken beim Besäufnis", "Fr, 02 März 2012 Øl trinken beim Besäufnis")
+        fmt("English_United Kingdom.1252", "%a, %d %B %Y Øl trinken beim Besäufnis", "Fri, 02 March 2012 Øl trinken beim Besäufnis")
+        if six.PY3:
+            # Py3 "normalizes" non-ascii chars to their ascii simile, e.g. `Ø' --> `O'
+            fmt("Russian_Russia.1251", "%a, %d %B %Y Øl trinken beim Besäufnis", "Пт, 02 Март 2012 Ol trinken beim Besaufnis")
+            fmt("Russian_Russia.1251", "Øl trinken beim Besäufnis", "Ol trinken beim Besaufnis")
+        else:
+            fmt("Russian_Russia.1251", "%a, %d %B %Y Øl trinken beim Besäufnis", "Пт, 02 Март 2012 Øl trinken beim Besäufnis")
+            fmt("Russian_Russia.1251", "Øl trinken beim Besäufnis", "Øl trinken beim Besäufnis")
     else:
         fmt("C", "%c", "Fri Mar  2 00:00:00 2012")
         fmt("de_DE", "%c", "Fr 02 Mär 2012 00:00:00 ") # trailing blank WTF??

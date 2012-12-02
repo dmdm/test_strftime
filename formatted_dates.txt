@@ -1,0 +1,20 @@
+Locale: C, language code: None, encoding: None
+.. Formatted date:Fri, 02 March 2012
+Locale: German_Germany.1252, language code: de_DE, encoding: cp1252
+.. Formatted date:Fr, 02 März 2012
+Locale: Russian_Russia.1251, language code: Russian_Russia, encoding: 1251
+.. Formatted date:Пт, 02 Март 2012
+Locale: Russian_Russia.1251, language code: Russian_Russia, encoding: 1251
+.. Formatted date:Пт, 02 Март 2012
+Locale: English_United Kingdom.1252, language code: English_United Kingdom, encoding: 1252
+.. Formatted date:Fri, 02 March 2012
+Locale: C, language code: None, encoding: None
+.. Formatted date:Fri, 02 March 2012 Øl trinken beim Besäufnis
+Locale: German_Germany.1252, language code: de_DE, encoding: cp1252
+.. Formatted date:Fr, 02 März 2012 Øl trinken beim Besäufnis
+Locale: English_United Kingdom.1252, language code: English_United Kingdom, encoding: 1252
+.. Formatted date:Fri, 02 March 2012 Øl trinken beim Besäufnis
+Locale: Russian_Russia.1251, language code: Russian_Russia, encoding: 1251
+.. Formatted date:Пт, 02 Март 2012 Ol trinken beim Besaufnis
+Locale: Russian_Russia.1251, language code: Russian_Russia, encoding: 1251
+.. Formatted date:Ol trinken beim Besaufnis
